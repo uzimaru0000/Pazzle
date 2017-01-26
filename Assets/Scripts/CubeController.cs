@@ -25,7 +25,7 @@ public class CubeController : MonoBehaviour {
         var h = Input.GetAxisRaw("Horizontal");
         var v = Input.GetAxisRaw("Vertical");
         var dir = new PosiData { x = (int)h,  y = (int)v };
-        if (!isMove) {
+        if (!isMove && GameManager.Instance.State == GameState.play) {
             if (h >= 1) {
                 if (Move(dir)) {
                     anime.SetTrigger("Right");
@@ -60,8 +60,6 @@ public class CubeController : MonoBehaviour {
                 isMove = true;
             }
         }
-
-        if(StageManager.Instance.checkGoal(pData.x, pData.y)) print("This is Goal.");
 	}
 
     bool Move(PosiData dir) {

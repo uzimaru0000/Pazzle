@@ -6,15 +6,19 @@ public class StageManager : MonoBehaviour {
 
     public static StageManager Instance;
 
-    public PosiData offset;
+    public GameObject wall;
+    public GameObject floor;
     public int width;
     public int height;
 
+    PosiData offset;
     FieldData[,] stageData;
+    int movableCubeNum;
 
     void Awake() {
         Instance = this;
         stageData = new FieldData[width, height];
+        offset = new PosiData { x = width / 2, y = height / 2 };
         for (var x = 0; x < width; x++) {
             for (var y = 0; y < height; y++) {
                 stageData[x, y] = new FieldData {
@@ -23,6 +27,21 @@ public class StageManager : MonoBehaviour {
                 };
             }
         }
+
+        for (var x = -1; x < width+1; x++) {
+            for (var y = -1; y < height+1; y++) {
+                var px = x - offset.x;
+                var py = y - offset.y;
+                GameObject obj;
+                if ((x >= 0 && x < width) && (y >= 0 && y < height)) {
+                    obj = Instantiate(floor, new Vector3(px, 0, py), Quaternion.Euler(90, 0, 0)) as GameObject;
+                } else { 
+                    obj = Instantiate(wall, new Vector3(px, 0, py), Quaternion.Euler(90, 0, 0)) as GameObject;
+                }
+                obj.transform.SetParent(transform);
+            }
+        }
+
     }
     void LateUpdate() {
 
@@ -35,8 +54,16 @@ public class StageManager : MonoBehaviour {
         return stageData[x, y].type == FieldData.ObjType.Obj;
     }
 
-    public bool checkGoal(int x, int y) {
-        return stageData[x + offset.x, y + offset.y].type == FieldData.ObjType.Goal;
+    public bool checkGoal() {
+        int num = 0;
+        for (var x = 0; x < width; x++) {
+            for (var y = 0; y < height; y++) {
+                if (stageData[x, y].type == FieldData.ObjType.Goal && stageData[x, y].onCube) {
+                    num++;
+                }
+            }
+        }
+        return movableCubeNum == num;
     }
 
     public void setObj(int x, int y) {
@@ -49,6 +76,7 @@ public class StageManager : MonoBehaviour {
 
     public void setCube(int x, int y) {
         stageData[x + offset.x, y + offset.y].onCube = true;
+        movableCubeNum++;
     }
 
     public bool MoveCheck(int x, int y, PosiData dir) {
@@ -90,7 +118,6 @@ public struct PosiData {
 public struct FieldData {
     public enum ObjType {
         None,
-        MovableCube,
         Obj,
         Goal
     }
