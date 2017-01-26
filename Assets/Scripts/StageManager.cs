@@ -10,10 +10,13 @@ public class StageManager : MonoBehaviour {
     public GameObject floor;
     public int width;
     public int height;
+    public float fadeTime;
 
     PosiData offset;
     FieldData[,] stageData;
     int movableCubeNum;
+
+    public PosiData Offset { get; }
 
     void Awake() {
         Instance = this;
@@ -38,6 +41,8 @@ public class StageManager : MonoBehaviour {
                 } else { 
                     obj = Instantiate(wall, new Vector3(px, 0, py), Quaternion.Euler(90, 0, 0)) as GameObject;
                 }
+                var rate = (x + y + 2.0f) / (width + height + 4.0f);
+                obj.GetComponent<Obj>().interval = rate * fadeTime;
                 obj.transform.SetParent(transform);
             }
         }

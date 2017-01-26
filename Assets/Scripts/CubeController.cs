@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CubeController : MonoBehaviour {
+public class CubeController : Obj {
     
     public bool isMove;
 
@@ -11,17 +11,25 @@ public class CubeController : MonoBehaviour {
     PosiData pData;
 
 	// Use this for initialization
-	void Start () {
+	new void Start () {
+        base.Start();
+
+        var sm = StageManager.Instance;
         anime = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
         pData = new PosiData();
         pData.x = (int)transform.position.x;
         pData.y = (int)transform.position.y;
-        StageManager.Instance.setCube(pData.x, pData.y);
+        sm.setCube(pData.x, pData.y);
+
+        var offs = sm.Offset;
+        var w = sm.width;
+        var h = sm.height;
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	new void Update () {
+        base.Update();
         var h = Input.GetAxisRaw("Horizontal");
         var v = Input.GetAxisRaw("Vertical");
         var dir = new PosiData { x = (int)h,  y = (int)v };
