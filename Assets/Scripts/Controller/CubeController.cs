@@ -9,6 +9,7 @@ public class CubeController : Obj {
     Animator anime;
     AudioSource audioSource;
     PosiData pData;
+    bool goalAnime;
 
 	// Use this for initialization
 	new void Start () {
@@ -21,10 +22,6 @@ public class CubeController : Obj {
         pData.x = (int)transform.position.x;
         pData.y = (int)transform.position.y;
         sm.setCube(pData.x, pData.y);
-
-        var offs = sm.Offset;
-        var w = sm.width;
-        var h = sm.height;
 	}
 	
 	// Update is called once per frame
@@ -68,12 +65,22 @@ public class CubeController : Obj {
                 isMove = true;
             }
         }
+        if (goalAnime) {
+            transform.position -= transform.up * Time.deltaTime;
+            if (transform.position.y < -0.5f) goalAnime = false;
+        }
 	}
 
     bool Move(PosiData dir) {
         var sm = StageManager.Instance;
         var result = sm.MoveCheck(pData.x, pData.y, dir);
         if (result) sm.Move(pData.x, pData.y, dir);
+        audioSource.Play();
         return result;
     }
+
+    public override void Clear() {
+        goalAnime = true;
+    }
+
 }

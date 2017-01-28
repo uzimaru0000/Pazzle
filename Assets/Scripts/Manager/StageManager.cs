@@ -30,15 +30,17 @@ public class StageManager : MonoBehaviour {
                 };
             }
         }
+    }
 
-        for (var x = -1; x < width+1; x++) {
-            for (var y = -1; y < height+1; y++) {
+    void Start() {
+        for (var x = -1; x < width + 1; x++) {
+            for (var y = -1; y < height + 1; y++) {
                 var px = x - offset.x;
                 var py = y - offset.y;
                 GameObject obj;
                 if ((x >= 0 && x < width) && (y >= 0 && y < height)) {
                     obj = Instantiate(floor, new Vector3(px, 0, py), Quaternion.Euler(90, 0, 0)) as GameObject;
-                } else { 
+                } else {
                     obj = Instantiate(wall, new Vector3(px, 0, py), Quaternion.Euler(90, 0, 0)) as GameObject;
                 }
                 var rate = (x + y + 2.0f) / (width + height + 4.0f);
@@ -46,8 +48,9 @@ public class StageManager : MonoBehaviour {
                 obj.transform.SetParent(transform);
             }
         }
-
+        GameManager.Instance.State = GameState.stanby;
     }
+
     void LateUpdate() {
 
     }

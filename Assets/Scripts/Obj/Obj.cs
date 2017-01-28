@@ -7,9 +7,9 @@ public class Obj : MonoBehaviour {
     public float rate;
     public float interval;
 
-    MeshRenderer m_renderer;
-    Color defaultColor;
-    float timer;
+    protected MeshRenderer m_renderer;
+    protected Color defaultColor;
+    protected float timer;
 
 	// Use this for initialization
     protected void Start () {
@@ -25,4 +25,6 @@ public class Obj : MonoBehaviour {
         if(timer >= interval) m_renderer.material.SetColor("_EmissionColor", Color.Lerp(Color.black, defaultColor, (timer-interval) / rate));
         timer += Time.deltaTime;
 	}
+
+    virtual public void Clear() { }
 }
